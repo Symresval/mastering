@@ -1,6 +1,7 @@
 package fr.esic.mastering.api;
 
 import fr.esic.mastering.entities.Formation;
+import org.springframework.http.HttpStatus;
 import fr.esic.mastering.repository.FormationRepository;
 import fr.esic.mastering.services.FormationService;
 
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/formations")
@@ -53,12 +55,14 @@ public class FormationRest {
     public Formation createFormation1(@RequestBody Formation formation) {
         return formationService.createFormation(formation);
     } 
+    
     // 5. Supprimer une formation par son ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteFormation(@PathVariable Long id) {
+    public ResponseEntity<String> deleteFormation(@PathVariable Long id) {
         return formationRepository.findById(id).map(existingFormation -> {
             formationRepository.delete(existingFormation);
-            return ResponseEntity.noContent().build();
-        }).orElse(ResponseEntity.notFound().build());
+            return ResponseEntity.ok("Formation avec l'ID " + id + " a été supprimée avec succès.");
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Formation avec l'ID " + id + " n'a pas été trouvée."));
     }
 }

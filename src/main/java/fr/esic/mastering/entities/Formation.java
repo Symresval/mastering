@@ -1,5 +1,9 @@
 package fr.esic.mastering.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -21,6 +25,11 @@ public class Formation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+    
+    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<User> users;
+
  
     @NotBlank(message = "Le champ nom est obligatoire.")
 
@@ -32,6 +41,7 @@ public class Formation {
 
     @Column(nullable = false)
 
+    @NotBlank(message = "Le champ niveau est obligatoire.")
     private String niveau;
  
     private String codeRncp;
